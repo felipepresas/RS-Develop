@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "421218712652",
+    "firebase_url": "https://rokkan-spinner-bd-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "rokkan-spinner-bd",
+    "storage_bucket": "rokkan-spinner-bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421218712652:android:52b798379bf98d678308e9",
+        "android_client_info": {
+          "package_name": "com.UnityTechnologies.com.unity.rokkanspinner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421218712652-cembgdabeifdm3u4onlve0ksfsuffviv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3cR3nTxOPodvd_IfCCyGEBaWsN0KZCc0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421218712652-1iqvk7qc0olr5hcg7asskvnl4n4g3h61.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
