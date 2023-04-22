@@ -5,6 +5,7 @@ using UnityEngine;
 using Firebase;
 using Firebase.Database;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool canDoubleJump;
     private bool canUseAbility = true;
+    public AudioSource pressureReleaseAudio;
+    public TextMeshProUGUI scoreText; // Agregar esta línea para referenciar el objeto de texto de TextMeshPro.
 
     public GameObject playerParticles;
     public GameObject damageEffect;
@@ -75,7 +78,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
             Instantiate(damageEffect, transform.position, Quaternion.identity);
-
+            ActivarHabilidad();
             lastAbilityTime = Time.time;
             canUseAbility = false;
         }
@@ -96,6 +99,12 @@ public class PlayerController : MonoBehaviour
         }
 
         CheckAndSendGameData();
+    }
+
+    public void ActivarHabilidad()
+    {
+        GetComponent<AudioSource>().Play();
+        pressureReleaseAudio.Play();
     }
 
     private void CheckAndSendGameData()
@@ -141,6 +150,18 @@ public class PlayerController : MonoBehaviour
             puntosActuales++;
             PlayerPrefs.SetInt("Puntos", puntosActuales);
         }
+        if (other.gameObject.CompareTag("PickUp"))
+        {
+            other.gameObject.SetActive(false);
+            score += 10; // Aumentar la puntuación en 10 puntos por cada objeto recogido.
+            UpdateScoreText(); // Llamada a la función para actualizar el objeto de texto con la puntuación.
+            Destroy(other.gameObject);
+        }
+    }
+
+    void UpdateScoreText()
+    {
+        scoreText.text = "Puntuación: " + score.ToString();
     }
 
     void OnCollisionEnter(Collision collision)

@@ -8,6 +8,7 @@ TagManager:
   - PowerUp
   - Enemy
   - Ball
+  - PickUp
   layers:
   - Default
   - TransparentFX

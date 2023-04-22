@@ -18,7 +18,7 @@ public class PlayerCamController : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(cameraOffset);
 
         // Aplicar rotación específica en el eje X
-        targetRotation *= Quaternion.Euler(10, 0, 0);
+        targetRotation *= Quaternion.Euler(5, 0, 0);
 
         // Rotar la cámara hacia la posición deseada
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
