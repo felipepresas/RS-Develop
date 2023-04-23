@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     public static PlayerController instance;
 
     [SerializeField]
-    private float speed = 5.0f;
+    private float speed = 14.0f;
 
     [SerializeField]
     private float jumpForce = 5.0f;
@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
     private string userId;
     private string username;
     private int currentHealth;
-    private int score = 0;
+    //private int score = 0;
     private bool hasPowerUp;
     private bool isGrounded;
     private bool canDoubleJump;
@@ -229,14 +229,7 @@ public class PlayerController : MonoBehaviour
 
     private void UpdatePlayerScore(int points)
     {
-        if (UIManager.instance != null)
-        {
-            UIManager.instance.UpdateScoreText(score);
-        }
-        else
-        {
-            Debug.LogError("UIManager.instance is null");
-        }
+      
     }
 
     IEnumerator PowerUpCountdown()

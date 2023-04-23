@@ -14,7 +14,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/RokkanGame.unity
     guid: 0b3eb1786c649b047bffe834b366f993
-  - enabled: 1
-    path: Assets/_Scenes/ShowGameOverScreen.unity
-    guid: 15676d667245bf3428de7f08bf51d414
   m_configObjects: {}
