@@ -6,15 +6,19 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField]
     private float moveSpeed = 5f;
+
     [SerializeField]
     private float rotationSpeed = 5f;
+
     [SerializeField]
     private float moveRange = 10f;
+
     [SerializeField]
     private int maxHealth = 2; // Vida máxima del enemigo
     private int currentHealth; // Vida actual del enemigo
     private Transform playerTransform;
     private HealthController healthController; // Referencia al HealthController del enemigo
+
     [SerializeField]
     private GameObject explosionPrefab; // Prefab de la explosión que se instancia cuando el enemigo muere
 
@@ -72,7 +76,10 @@ public class EnemyController : MonoBehaviour
 
     void Die()
     {
-        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        if (explosionPrefab != null)
+        {
+            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        }
         Destroy(gameObject);
     }
 }

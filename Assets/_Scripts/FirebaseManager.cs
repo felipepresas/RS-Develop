@@ -201,6 +201,7 @@ public class FirebaseManager : MonoBehaviour
             yield return new WaitForSeconds(2);
 
             usernameField.text = User.DisplayName;
+            PlayerPrefs.SetString("UserName", User.DisplayName);
             UIManager.instance.UserDataScreen(); // Change to user data UI
             confirmLoginText.text = "";
             ClearLoginFeilds();

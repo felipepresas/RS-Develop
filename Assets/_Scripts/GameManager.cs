@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public static GameManager Instance { get; private set; }
+    private float gameTime = 90f; // tiempo en segundos (1:30)
+    private float timer = 0f;
 
     // Variables para almacenar referencias a otros controladores y managers
     private UIManagerGame uiManagerGame;
@@ -23,7 +25,7 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
-        else
+        else if (Instance != this)
         {
             Destroy(gameObject);
         }
@@ -38,6 +40,8 @@ public class GameManager : MonoBehaviour
         uiManagerGame = FindObjectOfType<UIManagerGame>();
         playerController = FindObjectOfType<PlayerController>();
         enemyControllers = FindObjectsOfType<EnemyController>();
+
+        timer = gameTime;
     }
 
     public void GameOver()
@@ -47,6 +51,7 @@ public class GameManager : MonoBehaviour
             isGameOver = true;
             // Mostrar la pantalla de Game Over en el UI
             // uiManagerGame.ShowGameOverScreen();
+            UIManager.instance.ShowGameOverScreen();
         }
     }
 
@@ -71,11 +76,28 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+         // Resta el tiempo del temporizador
+        timer -= Time.deltaTime;
+
         if (playerController.isDead && !isGameOver)
-{
-    GameOver();
-}
+        {
+            GameOver();
+        }
+           if (timer <= 0f)
+        {
+            // Fin del juego
+            GameOver();
+        }
         // Actualizar el estado del juego y otros objetos según sea necesario
         // Por ejemplo, verificar si todos los enemigos están muertos y avanzar al siguiente nivel
+    }
+     public float GetTimeRemaining()
+    {
+        return timer;
+    }
+
+    public float GetGameTime()
+    {
+        return gameTime;
     }
 }

@@ -14,7 +14,7 @@ public static UIManager instance;
     public GameObject scoreboardUI;
       // Agregar referencias a los nuevos objetos de la pantalla
     public GameObject gameOverUI;
-    public GameObject pointsText;
+    public GameObject killText;
 
     private void Awake()
     {
@@ -27,22 +27,18 @@ public static UIManager instance;
             Debug.Log("Instancia exite, destruyendo objeto!");
             Destroy(this);
         }
+        Debug.Log("UIManager.instance set to " + instance.gameObject.name);
     }
-       // Nueva función para mostrar la pantalla de Game Over
+       // Gunción para mostrar la pantalla de Game Over
     public void ShowGameOverScreen()
     {
         ClearScreen();
         gameOverUI.SetActive(true);
     }
-      // Nueva función para actualizar el texto de los puntos en la pantalla
-    // public void UpdatePointsText(int points)
-    // {
-    //     pointsText.text = "Puntos: " + points;
-    // }
 
-      public void UpdateScoreText(int points)
+      public void UpdateScoreText(int kills)
     {
-        pointsText.GetComponent<TextMeshProUGUI>().text = "Puntos: " + points;
+        killText.GetComponent<TextMeshProUGUI>().text = "kills: " + kills;
     }
 
     public void ClearScreen() //Turn off all screens
@@ -75,4 +71,5 @@ public static UIManager instance;
         ClearScreen();
         scoreboardUI.SetActive(true);
     }
+
 }

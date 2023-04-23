@@ -8,6 +8,7 @@ using Firebase.Database;
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance;
+
     [SerializeField]
     private float speed = 5.0f;
 
@@ -92,6 +93,11 @@ public class PlayerController : MonoBehaviour
         currentHealth = maxHealth;
 
         healthController = GetComponent<HealthController>();
+        
+        if (UIManager.instance == null)
+        {
+            Debug.LogError("UIManager.instance is null");
+        }
     }
 
     void Update()
@@ -216,6 +222,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 healthController.TakeDamage(1);
+                GetComponent<AudioSource>().Play();
             }
         }
     }
