@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     public float timePowerUp;
     public float damageRadius = 5.0f;
     public float abilityCooldown = 10f;
-    private float lastAbilityTime = 0f;
+    private float lastAbilityTime = Mathf.NegativeInfinity;
     public int maxHealth = 10;
     public int currentHealth;
     public int score = 0;
@@ -26,7 +26,12 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool canDoubleJump;
     private bool canUseAbility = true;
-    public AudioSource pressureReleaseAudio;
+    public GameObject deathEffect;
+    public GameManager gameManager;
+    public Image abilityImage;
+    public TextMeshProUGUI abilityCooldownText;
+    public AudioClip pressureReleaseClip;
+    public AudioSource secondAudioSource;
     public TextMeshProUGUI scoreText; // Agregar esta línea para referenciar el objeto de texto de TextMeshPro.
 
     public GameObject playerParticles;
@@ -42,6 +47,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        gameManager = FindObjectOfType<GameManager>();
         string ruta = "kills";
         databaseReference = FirebaseDatabase.DefaultInstance.GetReference(ruta);
 
@@ -60,6 +66,9 @@ public class PlayerController : MonoBehaviour
 
         Vector3 movement = new Vector3(horizontalInput, 0, verticalInput);
         movement.Normalize();
+
+        // Verificar si la habilidad está disponible
+       
 
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
@@ -83,9 +92,27 @@ public class PlayerController : MonoBehaviour
             canUseAbility = false;
         }
 
-        if (!canUseAbility && Time.time - lastAbilityTime >= abilityCooldown)
+        // if (!canUseAbility && Time.time - lastAbilityTime >= abilityCooldown)
+        // {
+        //     canUseAbility = true;
+        // }
+        
+        // Verificar si la habilidad está disponible
+         if (Time.time >= lastAbilityTime + abilityCooldown)
         {
             canUseAbility = true;
+        }
+                // Actualizar la imagen y el contador de habilidad
+        if (canUseAbility)
+        {
+            abilityImage.enabled = true;
+            abilityCooldownText.enabled = false;
+        }
+        else
+        {
+            abilityImage.enabled = false;
+            abilityCooldownText.enabled = true;
+            abilityCooldownText.text = "CD " + (lastAbilityTime + abilityCooldown - Time.time).ToString("F1");
         }
 
         if (horizontalInput != 0)
@@ -103,8 +130,7 @@ public class PlayerController : MonoBehaviour
 
     public void ActivarHabilidad()
     {
-        GetComponent<AudioSource>().Play();
-        pressureReleaseAudio.Play();
+        secondAudioSource.PlayOneShot(pressureReleaseClip);
     }
 
     private void CheckAndSendGameData()
@@ -187,6 +213,7 @@ public class PlayerController : MonoBehaviour
         {
             healthController.TakeDamage(1);
         }
+        
     }
 
     public void OnSliderValueChanged(float value)
