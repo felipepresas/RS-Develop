@@ -1,49 +1,82 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using Firebase;
 using Firebase.Database;
-using UnityEngine.SceneManagement;
-using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    public string userId;
-    public string username;
-    public float speed = 5.0f;
-    public float jumpForce = 5.0f;
-    public float timeToStop = 1.0f;
-    public float powerUpForce;
-    public float timePowerUp;
-    public float damageRadius = 5.0f;
-    public float abilityCooldown = 10f;
-    private float lastAbilityTime = Mathf.NegativeInfinity;
-    public int maxHealth = 10;
-    public int currentHealth;
-    public int score = 0;
-    public bool hasPowerUp;
+    public static PlayerController instance;
+    [SerializeField]
+    private float speed = 5.0f;
+
+    [SerializeField]
+    private float jumpForce = 5.0f;
+
+    [SerializeField]
+    private float timeToStop = 1.0f;
+
+    [SerializeField]
+    private float powerUpForce;
+
+    [SerializeField]
+    private float timePowerUp;
+
+    [SerializeField]
+    private float damageRadius = 5.0f;
+
+    [SerializeField]
+    private float abilityCooldown = 10f;
+
+    [SerializeField]
+    private int maxHealth = 10;
+
+    [SerializeField]
+    private GameObject deathEffect;
+
+    [SerializeField]
+    private Image abilityImage;
+
+    [SerializeField]
+    private TextMeshProUGUI abilityCooldownText;
+
+    [SerializeField]
+    private AudioClip pressureReleaseClip;
+
+    [SerializeField]
+    private AudioSource secondAudioSource;
+
+    [SerializeField]
+    private GameObject playerParticles;
+
+    [SerializeField]
+    private GameObject damageEffect;
+
+    [SerializeField]
+    private LayerMask groundLayer;
+
+    [SerializeField]
+    private Collider damageArea;
+
+    [SerializeField]
+    private GameObject[] powerUpIndicators;
+
+    private string userId;
+    private string username;
+    private int currentHealth;
+    private int score = 0;
+    private bool hasPowerUp;
     private bool isGrounded;
     private bool canDoubleJump;
+    public bool isDead;
     private bool canUseAbility = true;
-    public GameObject deathEffect;
-    public GameManager gameManager;
-    public Image abilityImage;
-    public TextMeshProUGUI abilityCooldownText;
-    public AudioClip pressureReleaseClip;
-    public AudioSource secondAudioSource;
-    public TextMeshProUGUI scoreText; // Agregar esta línea para referenciar el objeto de texto de TextMeshPro.
-
-    public GameObject playerParticles;
-    public GameObject damageEffect;
-    public GameObject deathEffect;
-    public LayerMask groundLayer;
-    public Collider damageArea;
+    private float lastAbilityTime = Mathf.NegativeInfinity;
+    private GameManager gameManager;
     private Rigidbody rb;
     private DatabaseReference databaseReference;
-    public HealthController healthController;
+    private HealthController healthController;
     private Vector3 rotationDirection = Vector3.zero;
-    public GameObject[] powerUpIndicators;
 
     void Start()
     {
@@ -57,9 +90,23 @@ public class PlayerController : MonoBehaviour
         rb.drag = 0;
         rb.freezeRotation = true;
         currentHealth = maxHealth;
+
+        healthController = GetComponent<HealthController>();
     }
 
     void Update()
+    {
+        HandleMovement();
+        HandleJump();
+        HandleAbility();
+
+        if (rb.velocity.magnitude > 0)
+        {
+            rb.velocity -= rb.velocity * timeToStop * Time.deltaTime;
+        }
+    }
+
+    private void HandleMovement()
     {
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
@@ -67,15 +114,28 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = new Vector3(horizontalInput, 0, verticalInput);
         movement.Normalize();
 
-        // Verificar si la habilidad está disponible
-       
+        rb.AddForce(transform.forward * speed);
+        transform.Rotate(rotationDirection * Time.deltaTime * 90f);
 
+        if (horizontalInput != 0)
+        {
+            rotationDirection = Vector3.up * (horizontalInput > 0 ? 1 : -1);
+        }
+
+        playerParticles.SetActive(rb.velocity.magnitude > 0);
+    }
+
+    private void HandleJump()
+    {
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
         }
+    }
 
+    private void HandleAbility()
+    {
         if (canUseAbility && Input.GetKeyDown(KeyCode.E))
         {
             Collider[] hitColliders = Physics.OverlapSphere(transform.position, damageRadius);
@@ -86,73 +146,29 @@ public class PlayerController : MonoBehaviour
                     Destroy(hitCollider.gameObject);
                 }
             }
+
             Instantiate(damageEffect, transform.position, Quaternion.identity);
-            ActivarHabilidad();
+            secondAudioSource.PlayOneShot(pressureReleaseClip);
             lastAbilityTime = Time.time;
             canUseAbility = false;
         }
-
-        // if (!canUseAbility && Time.time - lastAbilityTime >= abilityCooldown)
-        // {
-        //     canUseAbility = true;
-        // }
-        
-        // Verificar si la habilidad está disponible
-         if (Time.time >= lastAbilityTime + abilityCooldown)
+        if (Time.time >= lastAbilityTime + abilityCooldown)
         {
             canUseAbility = true;
         }
-                // Actualizar la imagen y el contador de habilidad
-        if (canUseAbility)
-        {
-            abilityImage.enabled = true;
-            abilityCooldownText.enabled = false;
-        }
-        else
-        {
-            abilityImage.enabled = false;
-            abilityCooldownText.enabled = true;
-            abilityCooldownText.text = "CD " + (lastAbilityTime + abilityCooldown - Time.time).ToString("F1");
-        }
 
-        if (horizontalInput != 0)
-        {
-            rotationDirection = Vector3.up * (horizontalInput > 0 ? 1 : -1);
-        }
-
-        if (rb.velocity.magnitude > 0)
-        {
-            rb.velocity -= rb.velocity * timeToStop * Time.deltaTime;
-        }
-
-        CheckAndSendGameData();
+        UpdateAbilityUI();
     }
 
-    public void ActivarHabilidad()
+    private void UpdateAbilityUI()
     {
-        secondAudioSource.PlayOneShot(pressureReleaseClip);
-    }
+        abilityImage.enabled = canUseAbility;
+        abilityCooldownText.enabled = !canUseAbility;
 
-    private void CheckAndSendGameData()
-    {
-        if (currentHealth <= 0 && !gameObject.activeSelf)
+        if (!canUseAbility)
         {
-            Instantiate(deathEffect, transform.position, Quaternion.identity);
-        }
-    }
-
-    void FixedUpdate()
-    {
-        rb.AddForce(transform.forward * speed);
-        transform.Rotate(rotationDirection * Time.fixedDeltaTime * 90f);
-
-        if (rb.velocity.magnitude > 0)
-        {
-            playerParticles.SetActive(true);
-        }
-        else
-        {
-            playerParticles.SetActive(false);
+            abilityCooldownText.text =
+                "CD " + (lastAbilityTime + abilityCooldown - Time.time).ToString("F1");
         }
     }
 
@@ -165,66 +181,54 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(PowerUpCountdown());
             Destroy(other.gameObject);
         }
-        if (other.CompareTag("Enemy"))
+        else if (other.CompareTag("Enemy"))
         {
             healthController.TakeDamage(1);
+            UpdatePlayerScore(1);
         }
-        if (other.CompareTag("Enemy"))
-        {
-            // Sumar un punto
-            int puntosActuales = PlayerPrefs.GetInt("Puntos", 0);
-            puntosActuales++;
-            PlayerPrefs.SetInt("Puntos", puntosActuales);
-        }
-        if (other.gameObject.CompareTag("PickUp"))
+        else if (other.CompareTag("PickUp"))
         {
             other.gameObject.SetActive(false);
-            score += 10; // Aumentar la puntuación en 10 puntos por cada objeto recogido.
-            UpdateScoreText(); // Llamada a la función para actualizar el objeto de texto con la puntuación.
+            UpdatePlayerScore(10);
             Destroy(other.gameObject);
         }
     }
 
-    void UpdateScoreText()
-    {
-        scoreText.text = "Puntuación: " + score.ToString();
-    }
-
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
         }
-
-        if (collision.gameObject.CompareTag("Enemy") && hasPowerUp)
-        {
-            EnemyController enemyController = collision.gameObject.GetComponent<EnemyController>();
-
-            // Restar 2 puntos de vida al enemigo
-            enemyController.TakeDamage(2);
-
-            Rigidbody enemyRigidbody = collision.gameObject.GetComponent<Rigidbody>();
-            Vector3 awayFromPlayer =
-                collision.gameObject.transform.position - this.transform.position;
-            enemyRigidbody.AddForce(awayFromPlayer * powerUpForce, ForceMode.Impulse);
-        }
         else if (collision.gameObject.CompareTag("Enemy"))
         {
-            healthController.TakeDamage(1);
+            if (hasPowerUp)
+            {
+                EnemyController enemyController =
+                    collision.gameObject.GetComponent<EnemyController>();
+                enemyController.TakeDamage(2);
+
+                Rigidbody enemyRigidbody = collision.gameObject.GetComponent<Rigidbody>();
+                Vector3 awayFromPlayer =
+                    collision.gameObject.transform.position - this.transform.position;
+                enemyRigidbody.AddForce(awayFromPlayer * powerUpForce, ForceMode.Impulse);
+            }
+            else
+            {
+                healthController.TakeDamage(1);
+            }
         }
-        
     }
 
-    public void OnSliderValueChanged(float value)
+    private void UpdatePlayerScore(int points)
     {
-        if (healthController != null)
+        if (UIManager.instance != null)
         {
-            healthController.currentHealth = (int)value;
-            UIManagerGame.Instance.UpdateHealthBar(
-                healthController.currentHealth,
-                healthController.maxHealth
-            );
+            UIManager.instance.UpdateScoreText(score);
+        }
+        else
+        {
+            Debug.LogError("UIManager.instance is null");
         }
     }
 

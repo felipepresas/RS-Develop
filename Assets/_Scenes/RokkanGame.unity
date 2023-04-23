@@ -262,7 +262,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 10%
+  m_text: 100
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 84dd14695854bbc43a5faa24fcf93d0d, type: 2}
   m_sharedMaterial: {fileID: 21261991626553910, guid: 84dd14695854bbc43a5faa24fcf93d0d,
@@ -602,7 +602,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  currentHealth: 0
 --- !u!114 &99925766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -619,7 +618,6 @@ MonoBehaviour:
   rotationSpeed: 5
   moveRange: 10
   maxHealth: 2
-  currentHealth: 0
   explosionPrefab: {fileID: 1705727634}
 --- !u!64 &99925767
 MeshCollider:
@@ -1107,7 +1105,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  currentHealth: 0
 --- !u!114 &234880757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1124,7 +1121,6 @@ MonoBehaviour:
   rotationSpeed: 5
   moveRange: 10
   maxHealth: 2
-  currentHealth: 0
   explosionPrefab: {fileID: 2001459203}
 --- !u!64 &234880758
 MeshCollider:
@@ -7006,7 +7002,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  currentHealth: 0
 --- !u!114 &454698452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7023,7 +7018,6 @@ MonoBehaviour:
   rotationSpeed: 5
   moveRange: 10
   maxHealth: 2
-  currentHealth: 0
   explosionPrefab: {fileID: 429443821}
 --- !u!64 &454698453
 MeshCollider:
@@ -7442,7 +7436,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  currentHealth: 0
 --- !u!114 &509545826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7459,7 +7452,6 @@ MonoBehaviour:
   rotationSpeed: 5
   moveRange: 10
   maxHealth: 2
-  currentHealth: 0
   explosionPrefab: {fileID: 435868284}
 --- !u!64 &509545827
 MeshCollider:
@@ -12171,18 +12163,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20c6dbf0102c7bc468113ccdd97dad83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentPercent: 10
-  speed: 5
+  currentPercent: 100
+  speed: 10
   minValue: 0
-  maxValue: 10
-  valueLimit: 10
+  maxValue: 100
+  valueLimit: 100
   loadingBar: {fileID: 1793832882}
   textPercent: {fileID: 62718978}
-  isOn: 1
+  isOn: 0
   restart: 1
   invert: 0
   addPrefix: 0
-  addSuffix: 1
+  addSuffix: 0
   prefix: 
   suffix: '%'
   isLooped: 0
@@ -14695,7 +14687,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  currentHealth: 0
 --- !u!114 &1586439307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14712,7 +14703,6 @@ MonoBehaviour:
   rotationSpeed: 5
   moveRange: 10
   maxHealth: 2
-  currentHealth: 0
   explosionPrefab: {fileID: 1866432865}
 --- !u!64 &1586439308
 MeshCollider:
@@ -14772,7 +14762,6 @@ MonoBehaviour:
   rotationSpeed: 5
   moveRange: 10
   maxHealth: 2
-  currentHealth: 0
   explosionPrefab: {fileID: 1661534564}
 --- !u!114 &1591449642
 MonoBehaviour:
@@ -14787,7 +14776,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  currentHealth: 0
 --- !u!114 &1591449643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15003,7 +14991,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  currentHealth: 0
 --- !u!114 &1606541737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15020,7 +15007,6 @@ MonoBehaviour:
   rotationSpeed: 5
   moveRange: 10
   maxHealth: 2
-  currentHealth: 0
   explosionPrefab: {fileID: 2070654164}
 --- !u!64 &1606541738
 MeshCollider:
@@ -15183,6 +15169,9 @@ MonoBehaviour:
   target: {fileID: 224411983}
   smoothTime: 1
   rotationSpeed: 10
+  heightOffset: 2
+  distanceOffset: 8
+  isDead: 0
 --- !u!1 &1634524087
 GameObject:
   m_ObjectHideFlags: 0
@@ -16919,7 +16908,6 @@ MonoBehaviour:
   rotationSpeed: 5
   moveRange: 10
   maxHealth: 2
-  currentHealth: 0
   explosionPrefab: {fileID: 1190333344}
 --- !u!114 &1813234027
 MonoBehaviour:
@@ -16934,7 +16922,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  currentHealth: 0
 --- !u!114 &1813234028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16986,7 +16973,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  currentHealth: 0
 --- !u!114 &1815542326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17003,7 +16989,6 @@ MonoBehaviour:
   rotationSpeed: 5
   moveRange: 10
   maxHealth: 2
-  currentHealth: 0
   explosionPrefab: {fileID: 870093303}
 --- !u!64 &1815542327
 MeshCollider:
@@ -18020,7 +18005,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  currentHealth: 0
 --- !u!114 &1919788354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18037,7 +18021,6 @@ MonoBehaviour:
   rotationSpeed: 5
   moveRange: 10
   maxHealth: 2
-  currentHealth: 0
   explosionPrefab: {fileID: 822643436}
 --- !u!64 &1919788355
 MeshCollider:
@@ -18849,7 +18832,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  currentHealth: 0
 --- !u!114 &2066503821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18866,7 +18848,6 @@ MonoBehaviour:
   rotationSpeed: 5
   moveRange: 10
   maxHealth: 2
-  currentHealth: 0
   explosionPrefab: {fileID: 377259223}
 --- !u!64 &2066503822
 MeshCollider:
@@ -18945,7 +18926,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  currentHealth: 0
 --- !u!114 &2073007695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18962,7 +18942,6 @@ MonoBehaviour:
   rotationSpeed: 5
   moveRange: 10
   maxHealth: 2
-  currentHealth: 0
   explosionPrefab: {fileID: 788783560}
 --- !u!64 &2073007696
 MeshCollider:
@@ -19465,7 +19444,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 10
-  currentHealth: 0
 --- !u!114 &3551321009665199379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19508,7 +19486,7 @@ PrefabInstance:
     - target: {fileID: 3551321009665199362, guid: efc48df3c0023a84380dc2d80b4a93e9,
         type: 3}
       propertyPath: speed
-      value: 22
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 3551321009665199362, guid: efc48df3c0023a84380dc2d80b4a93e9,
         type: 3}

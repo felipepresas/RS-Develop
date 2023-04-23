@@ -4,33 +4,35 @@ using UnityEngine;
 
 public class HealthController : MonoBehaviour
 {
-    public int maxHealth = 10;
-    public int currentHealth;
+    [SerializeField]
+    private int maxHealth = 10;
+    private int currentHealth;
+    private UIManagerGame uiManager;
+    private PlayerController player;
 
     void Start()
     {
         currentHealth = maxHealth;
+        uiManager = FindObjectOfType<UIManagerGame>();
+         player = FindObjectOfType<PlayerController>();
     }
 
     public void TakeDamage(int damage)
     {
-        currentHealth -= damage;
+       currentHealth -= damage;
 
-        if (currentHealth <= 0)
-        {
-            Die();
+    if (currentHealth <= 0) {
+        currentHealth = 0;
+        if (player.isDead) {
+            GameManager.instance.GameOver();
         }
-        else
-        {
-            UIManagerGame uiManager = FindObjectOfType<UIManagerGame>();
-            uiManager.UpdateHealthBar(currentHealth, maxHealth);
-        }
-        
+    }
     }
 
     private void Die()
     {
         gameObject.SetActive(false);
+         PlayerController.instance.isDead = true;
         // ...
     }
 

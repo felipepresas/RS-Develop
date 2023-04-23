@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public static UIManager instance;
     public GameObject registerUI;
     public GameObject userDataUI;
     public GameObject scoreboardUI;
+      // Agregar referencias a los nuevos objetos de la pantalla
+    public GameObject gameOverUI;
+    public GameObject pointsText;
 
     private void Awake()
     {
@@ -24,8 +28,22 @@ public static UIManager instance;
             Destroy(this);
         }
     }
+       // Nueva función para mostrar la pantalla de Game Over
+    public void ShowGameOverScreen()
+    {
+        ClearScreen();
+        gameOverUI.SetActive(true);
+    }
+      // Nueva función para actualizar el texto de los puntos en la pantalla
+    // public void UpdatePointsText(int points)
+    // {
+    //     pointsText.text = "Puntos: " + points;
+    // }
 
-    //Functions to change the login screen UI
+      public void UpdateScoreText(int points)
+    {
+        pointsText.GetComponent<TextMeshProUGUI>().text = "Puntos: " + points;
+    }
 
     public void ClearScreen() //Turn off all screens
     {

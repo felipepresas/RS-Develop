@@ -12,11 +12,11 @@ public class EnemyController : MonoBehaviour
     private float moveRange = 10f;
     [SerializeField]
     private int maxHealth = 2; // Vida máxima del enemigo
-    public int currentHealth; // Vida actual del enemigo
+    private int currentHealth; // Vida actual del enemigo
     private Transform playerTransform;
     private HealthController healthController; // Referencia al HealthController del enemigo
-    public GameObject explosionPrefab;
-    
+    [SerializeField]
+    private GameObject explosionPrefab; // Prefab de la explosión que se instancia cuando el enemigo muere
 
     private void Start()
     {
@@ -30,17 +30,14 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        // Verificar si el enemigo ha perdido toda su vida
         if (currentHealth <= 0)
         {
-            Destroy(gameObject); // Destruir el objeto del enemigo
+            Die();
             return;
         }
 
-        // Calcular la dirección hacia el jugador
         Vector3 direction = (playerTransform.position - transform.position).normalized;
 
-        // Rotar hacia el jugador
         Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.up);
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
@@ -48,7 +45,6 @@ public class EnemyController : MonoBehaviour
             Time.deltaTime * rotationSpeed
         );
 
-        // Mover hacia el jugador dentro del rango establecido
         float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
         if (distanceToPlayer <= moveRange)
         {
@@ -60,9 +56,7 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            // Restar una cantidad de vida al enemigo cuando colisiona con el jugador
             healthController.TakeDamage(1);
-            // Restar una unidad de vida al enemigo
             currentHealth -= 1;
         }
     }
