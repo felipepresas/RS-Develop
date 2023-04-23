@@ -7,32 +7,35 @@ public class HealthController : MonoBehaviour
     [SerializeField]
     private int maxHealth = 10;
     private int currentHealth;
-    private UIManagerGame uiManager;
+    private UIGame uiManager;
     private PlayerController player;
+    public delegate void DeathAction();
+    public event DeathAction OnDeath;
 
     void Start()
     {
         currentHealth = maxHealth;
-        uiManager = FindObjectOfType<UIManagerGame>();
-         player = FindObjectOfType<PlayerController>();
+        uiManager = FindObjectOfType<UIGame>();
+        player = FindObjectOfType<PlayerController>();
     }
 
     public void TakeDamage(int damage)
     {
-       currentHealth -= damage;
+        currentHealth -= damage;
 
-    if (currentHealth <= 0) {
-        currentHealth = 0;
-        if (player.isDead) {
-            GameManager.instance.GameOver();
+        if (currentHealth <= 0)
+        {
+            if (OnDeath != null)
+            {
+                OnDeath();
+            }
         }
-    }
     }
 
     private void Die()
     {
         gameObject.SetActive(false);
-         PlayerController.instance.isDead = true;
+        PlayerController.instance.isDead = true;
         // ...
     }
 

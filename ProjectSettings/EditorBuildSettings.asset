@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Scenes/IntroRokkan.unity
+    path: Assets/Scenes/IntroRokkan.unity
     guid: c41384819217260489097c1061b1f022
   - enabled: 1
-    path: Assets/_Scenes/MainMenu.unity
+    path: Assets/Scenes/MainMenu.unity
     guid: 5cc2ffcc94587ac4b9e14cb0c20cee10
   - enabled: 1
-    path: Assets/_Scenes/RokkanGame.unity
+    path: Assets/Scenes/RokkanGame.unity
     guid: 0b3eb1786c649b047bffe834b366f993
   m_configObjects: {}

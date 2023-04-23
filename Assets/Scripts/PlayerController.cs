@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private int maxHealth = 10;
+    private int kills = 0; // Añadir esta variable para llevar la cuenta de las muertes
 
     [SerializeField]
     private GameObject deathEffect;
@@ -66,7 +67,6 @@ public class PlayerController : MonoBehaviour
     private string userId;
     private string username;
     private int currentHealth;
-    //private int score = 0;
     private bool hasPowerUp;
     private bool isGrounded;
     private bool canDoubleJump;
@@ -93,11 +93,8 @@ public class PlayerController : MonoBehaviour
         currentHealth = maxHealth;
 
         healthController = GetComponent<HealthController>();
-        
-        if (UIManager.instance == null)
-        {
-            Debug.LogError("UIManager.instance is null");
-        }
+        healthController.OnDeath += HandlePlayerDeath;
+
     }
 
     void Update()
@@ -166,6 +163,12 @@ public class PlayerController : MonoBehaviour
         UpdateAbilityUI();
     }
 
+    private void HandlePlayerDeath()
+    {
+        isDead = true;
+        Instantiate(deathEffect, transform.position, Quaternion.identity);
+    }
+
     private void UpdateAbilityUI()
     {
         abilityImage.enabled = canUseAbility;
@@ -190,7 +193,7 @@ public class PlayerController : MonoBehaviour
         else if (other.CompareTag("Enemy"))
         {
             healthController.TakeDamage(1);
-            UpdatePlayerScore(1);
+            UpdatePlayerKills();
         }
         else if (other.CompareTag("PickUp"))
         {
@@ -229,7 +232,15 @@ public class PlayerController : MonoBehaviour
 
     private void UpdatePlayerScore(int points)
     {
-      
+        // Actualiza la puntuación basada en los puntos obtenidos
+        UIGame.Instance.UpdatePointsText(points);
+    }
+
+    private void UpdatePlayerKills()
+    {
+        // Actualiza la cantidad de muertes
+        kills += 1;
+        UIGame.Instance.UpdateKillsText(kills);
     }
 
     IEnumerator PowerUpCountdown()

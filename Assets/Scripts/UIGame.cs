@@ -4,24 +4,20 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class UIManagerGame : MonoBehaviour
+public class UIGame : MonoBehaviour
 {
-    public static UIManagerGame Instance { get; private set; }
-
-    [SerializeField]
-    private TextMeshProUGUI healthText;
+    public static UIGame Instance { get; private set; }
     public GameObject healthBar;
     public Slider slider;
     private PlayerController playerController;
     private EnemyController[] enemyControllers;
     private float gameTime;
     private float timeRemaining;
-
-    [SerializeField]
-    private TextMeshProUGUI enemyHealthText;
-
     [SerializeField]
     private TextMeshProUGUI pointsText;
+
+    [SerializeField]
+    private TextMeshProUGUI killText; // Añadido killText
 
     [SerializeField]
     private TextMeshProUGUI userNameText;
@@ -31,6 +27,15 @@ public class UIManagerGame : MonoBehaviour
 
     private void Start()
     {
+        // Asegurar que solo haya una instancia de UIGame
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
         // Obtener una referencia al UIManagerGame
         Instance = this;
         // Obtener el nombre de usuario del UIManager
@@ -85,5 +90,10 @@ public class UIManagerGame : MonoBehaviour
         // Restar el tiempo del temporizador
         timeRemaining = GameManager.Instance.GetTimeRemaining();
         UpdateTimeRemainingText();
+    }
+
+    public void UpdateKillsText(int kills)
+    {
+        killText.text = "Kills: " + kills;
     }
 }

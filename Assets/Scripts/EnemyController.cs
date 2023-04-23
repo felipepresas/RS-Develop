@@ -82,4 +82,13 @@ public class EnemyController : MonoBehaviour
         }
         Destroy(gameObject);
     }
+
+    public int GetHealth()
+    {
+        return currentHealth;
+    }
+     public int GetMaxHealth()
+    {
+        return maxHealth;
+    }
 }

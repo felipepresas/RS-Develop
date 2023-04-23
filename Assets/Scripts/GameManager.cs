@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     private float timer = 0f;
 
     // Variables para almacenar referencias a otros controladores y managers
-    private UIManagerGame uiManagerGame;
     private PlayerController playerController;
     private EnemyController[] enemyControllers;
 
@@ -37,7 +36,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // Obtener referencias a otros controladores y managers
-        uiManagerGame = FindObjectOfType<UIManagerGame>();
         playerController = FindObjectOfType<PlayerController>();
         enemyControllers = FindObjectsOfType<EnemyController>();
 
@@ -50,7 +48,6 @@ public class GameManager : MonoBehaviour
         {
             isGameOver = true;
             // Mostrar la pantalla de Game Over en el UI
-            // uiManagerGame.ShowGameOverScreen();
             UIManager.instance.ShowGameOverScreen();
         }
     }
@@ -66,32 +63,35 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    public void AddPoints(int points)
-    {
-        // Agregar puntos al jugador y actualizar el UI
-        // int currentPoints = PlayerPrefs.GetInt("Puntos", 0);
-        // PlayerPrefs.SetInt("Puntos", currentPoints + points);
-        // uiManagerGame.UpdatePointsText(currentPoints + points);
-    }
-
     private void Update()
     {
-         // Resta el tiempo del temporizador
+        // Resta el tiempo del temporizador
         timer -= Time.deltaTime;
 
         if (playerController.isDead && !isGameOver)
         {
             GameOver();
         }
-           if (timer <= 0f)
+        if (timer <= 0f)
         {
             // Fin del juego
             GameOver();
         }
-        // Actualizar el estado del juego y otros objetos según sea necesario
-        // Por ejemplo, verificar si todos los enemigos están muertos y avanzar al siguiente nivel
     }
-     public float GetTimeRemaining()
+
+    public void UpdatePlayerScore(int points)
+    {
+        // Actualiza la puntuación basada en los puntos obtenidos
+        UIGame.Instance.UpdatePointsText(points);
+    }
+
+    public void UpdatePlayerKills(int kills)
+    {
+        // Actualiza la cantidad de muertes
+        UIGame.Instance.UpdateKillsText(kills);
+    }
+
+    public float GetTimeRemaining()
     {
         return timer;
     }
