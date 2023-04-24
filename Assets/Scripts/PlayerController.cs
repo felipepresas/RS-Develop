@@ -94,7 +94,6 @@ public class PlayerController : MonoBehaviour
 
         healthController = GetComponent<HealthController>();
         healthController.OnDeath += HandlePlayerDeath;
-
     }
 
     void Update()
@@ -117,7 +116,15 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = new Vector3(horizontalInput, 0, verticalInput);
         movement.Normalize();
 
-        rb.AddForce(transform.forward * speed);
+        if (verticalInput <= 0) // si el jugador presiona hacia atras
+        {
+            rb.AddForce(transform.forward * -speed); // se aplica una fuerza en sentido contrario para reducir la velocidad
+        }
+        else // si el jugador presiona hacia adelante
+        {
+            rb.AddForce(transform.forward * speed); // se aplica la fuerza normal
+        }
+
         transform.Rotate(rotationDirection * Time.deltaTime * 90f);
 
         if (horizontalInput != 0)
