@@ -13,8 +13,8 @@ public class FirebaseManager : MonoBehaviour
 {
     public static string currentSceneName;
     private string previousSceneName;
+
     //Firebase variables
-    
     public static FirebaseManager instance;
 
     [Header("Firebase")]
@@ -45,6 +45,9 @@ public class FirebaseManager : MonoBehaviour
     public TMP_InputField deathsField;
     public GameObject scoreElement;
     public Transform scoreboardContent;
+
+    // Agrega una referencia al ScoreboardManager
+    public ScoreboardManager scoreboardManager;
 
     void Awake()
     {
@@ -140,11 +143,14 @@ public class FirebaseManager : MonoBehaviour
         StartCoroutine(UpdateXp(int.Parse(xpField.text)));
         StartCoroutine(UpdateKills(int.Parse(killsField.text)));
         StartCoroutine(UpdateDeaths(int.Parse(deathsField.text)));
+        // Save game data
+        StartCoroutine(UpdateGameData());
     }
 
     public void ScoreboardButton()
     {
-        StartCoroutine(LoadScoreboardData());
+      // Delega la carga de datos de la tabla de puntuaciones al script ScoreboardManager
+        scoreboardManager.LoadScoreboardData();
     }
 
     // Funcion de Login
@@ -393,6 +399,37 @@ public class FirebaseManager : MonoBehaviour
         else
         {
             //Muertes actualizadas
+        }
+    }
+
+    private IEnumerator UpdateGameData()
+    {
+        int points = PlayerPrefs.GetInt("Puntos", 0);
+        float timeRemaining = PlayerPrefs.GetFloat("TimeRemaining", 0);
+
+        var DBTaskPoints = DBreference
+            .Child("Usuarios")
+            .Child(User.UserId)
+            .Child("Puntos")
+            .SetValueAsync(points);
+
+        var DBTaskTimeRemaining = DBreference
+            .Child("Usuarios")
+            .Child(User.UserId)
+            .Child("TiempoRestante")
+            .SetValueAsync(timeRemaining);
+
+        yield return new WaitUntil(
+            predicate: () => DBTaskPoints.IsCompleted && DBTaskTimeRemaining.IsCompleted
+        );
+
+        if (DBTaskPoints.Exception != null || DBTaskTimeRemaining.Exception != null)
+        {
+            Debug.LogWarning(message: $"Failed to save game data");
+        }
+        else
+        {
+            Debug.Log(message: "Game data saved successfully");
         }
     }
 

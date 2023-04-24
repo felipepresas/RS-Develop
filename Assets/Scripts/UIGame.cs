@@ -119,4 +119,10 @@ public class UIGame : MonoBehaviour
         // Asumiendo que ya tienes un GameObject para la pantalla de Partida finalizada en tu UI
         endGameScreen.SetActive(true);
     }
+    public void SaveGameData()
+{
+    PlayerPrefs.SetInt("Puntos", int.Parse(pointsText.text.Substring(8)));
+    PlayerPrefs.SetFloat("TimeRemaining", timeRemaining);
+    PlayerPrefs.Save();
+}
 }

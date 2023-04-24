@@ -55,12 +55,12 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-      if (!isGameOver)
-    {
-        isGameOver = true;
-        // Muestra la pantalla de Partida finalizada en el UI
-        UIGame.Instance.ShowEndGameScreen();
-    }
+        if (!isGameOver)
+        {
+            isGameOver = true;
+            // Muestra la pantalla de Partida finalizada en el UI
+            UIGame.Instance.ShowEndGameScreen();
+        }
     }
 
     public void RestartGame()
@@ -79,9 +79,13 @@ public class GameManager : MonoBehaviour
         // Resta el tiempo del temporizador
         timer -= Time.deltaTime;
 
-        if (playerController.isDead && !isGameOver)
+        // Comprueba que playerController no sea nulo antes de acceder a sus propiedades
+        if (playerController != null)
         {
-            GameOver();
+            if (playerController.isDead && !isGameOver)
+            {
+                GameOver();
+            }
         }
         else if (timer <= 0f && !isGameOver)
         {
