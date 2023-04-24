@@ -66,4 +66,5 @@ public class UIManager : MonoBehaviour
         ClearScreen();
         scoreboardUI.SetActive(true);
     }
+
 }

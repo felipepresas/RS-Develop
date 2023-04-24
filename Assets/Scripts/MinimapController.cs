@@ -5,9 +5,27 @@ using UnityEngine;
 public class MinimapController : MonoBehaviour
 {
     public Transform player;
+    public bool rotateWithPlayer = true;
+    public Vector3 cameraOffset = new Vector3(0, 70, 4);
 
-    void Update()
+    void LateUpdate()
     {
-        transform.position = new Vector3(player.position.x , 70, player.position.z + 4);
+        if (player != null)
+        {
+            transform.position = player.position + cameraOffset;
+            if (rotateWithPlayer)
+            {
+                transform.rotation = Quaternion.Euler(90, player.eulerAngles.y, 0);
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(90, 0, 0);
+            }
+        }
+    }
+
+    public void SetPlayer(Transform playerTransform)
+    {
+        player = playerTransform;
     }
 }

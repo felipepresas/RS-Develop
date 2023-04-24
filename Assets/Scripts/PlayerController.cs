@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     public static PlayerController instance;
 
     [SerializeField]
-    private float speed = 14.0f;
+    private float speed = 12.0f;
 
     [SerializeField]
     private float jumpForce = 5.0f;
@@ -64,13 +64,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private GameObject[] powerUpIndicators;
 
+    public bool isDead;
     private string userId;
     private string username;
     private int currentHealth;
     private bool hasPowerUp;
     private bool isGrounded;
     private bool canDoubleJump;
-    public bool isDead;
     private bool canUseAbility = true;
     private float lastAbilityTime = Mathf.NegativeInfinity;
     private GameManager gameManager;
@@ -174,6 +174,7 @@ public class PlayerController : MonoBehaviour
     {
         isDead = true;
         Instantiate(deathEffect, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 
     private void UpdateAbilityUI()
@@ -211,31 +212,35 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision collision)
+{
+    if (collision.gameObject.CompareTag("Ground"))
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        isGrounded = true;
+    }
+    else if (collision.gameObject.CompareTag("Enemy"))
+    {
+        if (hasPowerUp)
         {
-            isGrounded = true;
-        }
-        else if (collision.gameObject.CompareTag("Enemy"))
-        {
-            if (hasPowerUp)
-            {
-                EnemyController enemyController =
-                    collision.gameObject.GetComponent<EnemyController>();
-                enemyController.TakeDamage(2);
+            HealthController enemyHealthController =
+                collision.gameObject.GetComponent<HealthController>();
+            enemyHealthController.TakeDamage(2);
 
-                Rigidbody enemyRigidbody = collision.gameObject.GetComponent<Rigidbody>();
-                Vector3 awayFromPlayer =
-                    collision.gameObject.transform.position - this.transform.position;
-                enemyRigidbody.AddForce(awayFromPlayer * powerUpForce, ForceMode.Impulse);
-            }
-            else
+            Rigidbody enemyRigidbody = collision.gameObject.GetComponent<Rigidbody>();
+            Vector3 awayFromPlayer =
+                collision.gameObject.transform.position - this.transform.position;
+            enemyRigidbody.AddForce(awayFromPlayer * powerUpForce, ForceMode.Impulse);
+        }
+        else
+        {
+            healthController.TakeDamage(1);
+            AudioSource audioSource = GetComponent<AudioSource>();
+            if (audioSource && audioSource.enabled)
             {
-                healthController.TakeDamage(1);
-                GetComponent<AudioSource>().Play();
+                audioSource.Play();
             }
         }
     }
+}
 
     private void UpdatePlayerScore(int points)
     {

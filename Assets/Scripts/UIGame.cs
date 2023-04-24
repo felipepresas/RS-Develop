@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIGame : MonoBehaviour
 {
     public static UIGame Instance { get; private set; }
     public GameObject healthBar;
     public Slider slider;
+
+    [SerializeField]
+    private GameObject endGameScreen;
     private PlayerController playerController;
     private EnemyController[] enemyControllers;
     private float gameTime;
     private float timeRemaining;
+
     [SerializeField]
     private TextMeshProUGUI pointsText;
 
@@ -47,7 +51,20 @@ public class UIGame : MonoBehaviour
         playerController = GameObject
             .FindGameObjectWithTag("Player")
             .GetComponent<PlayerController>();
+        HealthController playerHealthController = playerController.GetComponent<HealthController>();
         enemyControllers = FindObjectsOfType<EnemyController>();
+        // Suscribirse al evento OnHealthChanged y actualizar la barra de vida
+        playerHealthController.OnHealthChanged += () =>
+        {
+            UpdateHealthBar(
+                playerHealthController.GetHealth(),
+                playerHealthController.GetMaxHealth()
+            );
+        };
+
+        // Inicializar el valor de la barra de vida
+        slider.value = playerHealthController.GetHealth();
+        slider.maxValue = playerHealthController.GetMaxHealth();
 
         // Obtener la referencia al slider de la barra de vida
         slider = healthBar.GetComponent<Slider>();
@@ -95,5 +112,11 @@ public class UIGame : MonoBehaviour
     public void UpdateKillsText(int kills)
     {
         killText.text = "Kills: " + kills;
+    }
+
+    public void ShowEndGameScreen()
+    {
+        // Asumiendo que ya tienes un GameObject para la pantalla de Partida finalizada en tu UI
+        endGameScreen.SetActive(true);
     }
 }

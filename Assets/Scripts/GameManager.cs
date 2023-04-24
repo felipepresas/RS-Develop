@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
 
         // No destruir este objeto al cargar una nueva escena
         DontDestroyOnLoad(gameObject);
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void Start()
@@ -42,14 +43,24 @@ public class GameManager : MonoBehaviour
         timer = gameTime;
     }
 
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        playerController = FindObjectOfType<PlayerController>();
+    }
+
     public void GameOver()
     {
-        if (!isGameOver)
-        {
-            isGameOver = true;
-            // Mostrar la pantalla de Game Over en el UI
-            UIManager.instance.ShowGameOverScreen();
-        }
+      if (!isGameOver)
+    {
+        isGameOver = true;
+        // Muestra la pantalla de Partida finalizada en el UI
+        UIGame.Instance.ShowEndGameScreen();
+    }
     }
 
     public void RestartGame()
@@ -72,7 +83,7 @@ public class GameManager : MonoBehaviour
         {
             GameOver();
         }
-        if (timer <= 0f)
+        else if (timer <= 0f && !isGameOver)
         {
             // Fin del juego
             GameOver();

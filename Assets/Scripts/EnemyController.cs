@@ -13,11 +13,9 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private float moveRange = 10f;
 
-    [SerializeField]
-    private int maxHealth = 2; // Vida máxima del enemigo
-    private int currentHealth; // Vida actual del enemigo
     private Transform playerTransform;
-    private HealthController healthController; // Referencia al HealthController del enemigo
+    private HealthController playerHealthController;
+    private HealthController enemyHealthController;
 
     [SerializeField]
     private GameObject explosionPrefab; // Prefab de la explosión que se instancia cuando el enemigo muere
@@ -25,21 +23,22 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        healthController = GameObject
+        playerHealthController = GameObject
             .FindGameObjectWithTag("Player")
             .GetComponent<HealthController>();
 
-        currentHealth = maxHealth; // Inicializar la vida actual del enemigo
+        enemyHealthController = GetComponent<HealthController>();
+
+        enemyHealthController.OnDeath += Die;
     }
 
     private void Update()
     {
-        if (currentHealth <= 0)
+                // Verifica si playerTransform es null antes de acceder a su posición
+        if (playerTransform == null)
         {
-            Die();
             return;
         }
-
         Vector3 direction = (playerTransform.position - transform.position).normalized;
 
         Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.up);
@@ -60,17 +59,8 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            healthController.TakeDamage(1);
-            currentHealth -= 1;
-        }
-    }
-
-    public void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
-        if (currentHealth <= 0)
-        {
-            Die();
+            playerHealthController.TakeDamage(1);
+            enemyHealthController.TakeDamage(1);
         }
     }
 
@@ -81,14 +71,5 @@ public class EnemyController : MonoBehaviour
             Instantiate(explosionPrefab, transform.position, Quaternion.identity);
         }
         Destroy(gameObject);
-    }
-
-    public int GetHealth()
-    {
-        return currentHealth;
-    }
-     public int GetMaxHealth()
-    {
-        return maxHealth;
     }
 }

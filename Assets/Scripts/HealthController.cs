@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class HealthController : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class HealthController : MonoBehaviour
     private PlayerController player;
     public delegate void DeathAction();
     public event DeathAction OnDeath;
+    public event Action OnHealthChanged;
 
     void Start()
     {
@@ -30,6 +32,7 @@ public class HealthController : MonoBehaviour
                 OnDeath();
             }
         }
+        OnHealthChanged?.Invoke();
     }
 
     private void Die()
@@ -42,5 +45,15 @@ public class HealthController : MonoBehaviour
     public void Heal(int amount)
     {
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        OnHealthChanged?.Invoke();
+    }
+        public int GetHealth()
+    {
+        return currentHealth;
+    }
+
+    public int GetMaxHealth()
+    {
+        return maxHealth;
     }
 }
