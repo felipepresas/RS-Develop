@@ -9071,7 +9071,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 224411983}
-  rotateWithPlayer: 1
+  rotateWithPlayer: 0
   cameraOffset: {x: 0, y: 70, z: 4}
 --- !u!1 &790432677
 GameObject:

@@ -29,6 +29,8 @@ public class ScoreboardManager : MonoBehaviour
 
         yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 
+        
+
         if (DBTask.Exception != null)
         {
             Debug.LogWarning(message: $"Fallo al registrar la tarea {DBTask.Exception}");

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1506521935640742051}
   - component: {fileID: 6013883536673367264}
   m_Layer: 5
-  m_Name: Kills
+  m_Name: KillsText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4918119057156476405}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 7391574367883471423}
   - component: {fileID: 3360985972359080067}
   m_Layer: 5
-  m_Name: Nombre de jugador
+  m_Name: UsernameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -166,7 +166,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4918119057156476405}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -282,7 +282,7 @@ GameObject:
   - component: {fileID: 7029503170811432045}
   - component: {fileID: 6737391511122109268}
   m_Layer: 5
-  m_Name: Posicion
+  m_Name: DeathsText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -301,7 +301,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4918119057156476405}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -417,7 +417,7 @@ GameObject:
   - component: {fileID: 2762052519974284403}
   - component: {fileID: 4995864916092474449}
   m_Layer: 5
-  m_Name: Experiencia
+  m_Name: XpText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -436,7 +436,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4918119057156476405}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -552,6 +552,7 @@ GameObject:
   - component: {fileID: 2531246881800969545}
   - component: {fileID: 9067910449170252136}
   - component: {fileID: 6629360465173009252}
+  - component: {fileID: -1396646377879718603}
   m_Layer: 5
   m_Name: ScoreboardEntry
   m_TagString: Untagged
@@ -571,10 +572,10 @@ RectTransform:
   m_LocalScale: {x: 0.42022568, y: 0.42022568, z: 0.42022568}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4523337330485548825}
   - {fileID: 50598740318564552}
   - {fileID: 2396148371586333732}
   - {fileID: 8603949519780773864}
+  - {fileID: 4523337330485548825}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -743,3 +744,19 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &-1396646377879718603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7587951673199381055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f85d469ff5a4494e8b9e49c7325d2e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  usernameText: {fileID: 3360985972359080067}
+  killsText: {fileID: 6013883536673367264}
+  deathsText: {fileID: 6737391511122109268}
+  xpText: {fileID: 4995864916092474449}

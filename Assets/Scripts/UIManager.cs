@@ -1,17 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
+
     // Screen object variables
     public GameObject loginUI;
     public GameObject registerUI;
     public GameObject userDataUI;
     public GameObject scoreboardUI;
     public GameObject gameOverUI;
+    public GameObject[] screens;
 
     private void Awake()
     {
@@ -19,10 +19,11 @@ public class UIManager : MonoBehaviour
         {
             instance = this;
         }
-        else if (instance != null)
+        else
         {
-            Debug.Log("Instancia exite, destruyendo objeto!");
+            Debug.LogError("More than one UIManager instance found! Destroying duplicate.");
             Destroy(this);
+            return;
         }
         Debug.Log("UIManager.instance set to " + instance.gameObject.name);
     }
@@ -36,11 +37,10 @@ public class UIManager : MonoBehaviour
 
     public void ClearScreen() //Turn off all screens
     {
-        loginUI.SetActive(false);
-        registerUI.SetActive(false);
-        userDataUI.SetActive(false);
-        scoreboardUI.SetActive(false);
-        gameOverUI.SetActive(false); // Añadido gameOverUI para ser desactivado
+    for (int i = 0; i < screens.Length; i++)
+    {
+        screens[i].SetActive(false);
+    }
     }
 
     public void LoginScreen() //Back button
@@ -66,5 +66,4 @@ public class UIManager : MonoBehaviour
         ClearScreen();
         scoreboardUI.SetActive(true);
     }
-
 }

@@ -60,7 +60,7 @@ public class FirebaseManager : MonoBehaviour
                 if (dependencyStatus == DependencyStatus.Available)
                 {
                     //Si estan todas disponibles inicializa Firebase
-                    InitializeFirebase();
+                    Invoke("InitializeFirebase", 0.5f); // Agrega tiempo de espera antes de inicializar Firebase
                 }
                 else
                 {
@@ -82,12 +82,29 @@ public class FirebaseManager : MonoBehaviour
             });
     }
 
+    void Start()
+    {
+        if (auth == null)
+        {
+            InitializeFirebase();
+        }
+    }
+
     private void InitializeFirebase()
     {
-        Debug.Log("Setting up Firebase Auth");
+        Debug.Log("Iniciando Firebase Auth");
         //Instancia el objeto de autenticacion
         auth = FirebaseAuth.DefaultInstance;
         DBreference = FirebaseDatabase.DefaultInstance.RootReference;
+
+        if (auth != null)
+        {
+            Debug.Log("Firebase Auth inicializado correctamente");
+        }
+        else
+        {
+            Debug.LogError("Error al inicializar Firebase Auth");
+        }
     }
 
     // limpia los registros de los campos
@@ -108,8 +125,16 @@ public class FirebaseManager : MonoBehaviour
     //Funcion para el boton de login
     public void LoginButton()
     {
-        // Llama la corrutina de login pasando el correo y la contraseña como parametros
-        StartCoroutine(Login(emailLoginField.text, passwordLoginField.text));
+        if (auth != null)
+        {
+            // Llama la corrutina de login pasando el correo y la contraseña como parametros
+            StartCoroutine(Login(emailLoginField.text, passwordLoginField.text));
+        }
+        else
+        {
+            Debug.LogError("Firebase Auth no está inicializado.");
+            warningLoginText.text = "Error de conexión. Por favor, inténtalo de nuevo.";
+        }
     }
 
     //Funcion para el boton de Regristro
@@ -149,8 +174,11 @@ public class FirebaseManager : MonoBehaviour
 
     public void ScoreboardButton()
     {
-      // Delega la carga de datos de la tabla de puntuaciones al script ScoreboardManager
-        scoreboardManager.LoadScoreboardData();
+            // Delega la carga de datos de la tabla de puntuaciones al script ScoreboardManager
+    scoreboardManager.LoadScoreboardData();
+
+    // Cambia a la pantalla de Scoreboard
+    UIManager.instance.ScoreboardScreen();
     }
 
     // Funcion de Login
