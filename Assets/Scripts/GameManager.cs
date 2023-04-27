@@ -54,6 +54,11 @@ public class GameManager : MonoBehaviour
         uiEndGameScreen = FindObjectOfType<UIEndGameScreen>();
     }
 
+    public void PlayerDied()
+    {
+        StartCoroutine(WaitForFirebaseManager());
+    }
+
     public void GameOver()
     {
         if (!isGameOver)
@@ -64,14 +69,25 @@ public class GameManager : MonoBehaviour
 
             // Actualiza la experiencia del jugador
             int experienceToAdd = 5;
-            string userId = FirebaseManager.instance.GetUserId();
-            if (userId != null)
+            if (FirebaseManager.instance == null)
             {
-                ScoreboardManager.instance.UpdatePlayerExperience(userId, experienceToAdd);
+                Debug.LogError("FirebaseManager.instance es null");
+            }
+            else if (ScoreboardManager.instance == null)
+            {
+                Debug.LogError("ScoreboardManager.instance es null");
             }
             else
             {
-                Debug.LogError("No se pudo obtener el ID de usuario.");
+                string userId = FirebaseManager.instance.GetUserId();
+                if (userId != null)
+                {
+                    ScoreboardManager.instance.UpdatePlayerExperience(userId, experienceToAdd);
+                }
+                else
+                {
+                    Debug.LogError("No se pudo obtener el ID de usuario.");
+                }
             }
         }
     }
@@ -86,6 +102,17 @@ public class GameManager : MonoBehaviour
 
         // Agregar un evento para ejecutar una función después de que se haya cargado la nueva escena
         SceneManager.sceneLoaded += OnSceneRestarted;
+    }
+
+    private IEnumerator WaitForFirebaseManager()
+    {
+        while (FirebaseManager.instance == null)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        isGameOver = true;
+        GameOver();
     }
 
     private void OnSceneRestarted(Scene scene, LoadSceneMode mode)
@@ -118,7 +145,7 @@ public class GameManager : MonoBehaviour
         {
             if ((playerController.isDead || timer <= 0f) && !isGameOver)
             {
-                GameOver();
+                StartCoroutine(WaitForFirebaseManager());
             }
         }
     }
