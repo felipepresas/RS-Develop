@@ -21130,6 +21130,59 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1568793665}
   m_CullTransparentMesh: 0
+--- !u!1 &1578777243
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1578777245}
+  - component: {fileID: 1578777244}
+  m_Layer: 0
+  m_Name: ToggleFullscreen
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1578777244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578777243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dd6c6a3fae8c5d4b87df93fac0f0c16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnFullscreenToggled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnResolutionChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnQualityLevelChanged:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &1578777245
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578777243}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 485.9132, y: 334.20367, z: -40.998608}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1579948647
 GameObject:
   m_ObjectHideFlags: 0
@@ -22028,8 +22081,7 @@ MonoBehaviour:
   xpField: {fileID: 2010059304}
   killsField: {fileID: 1942036409}
   deathsField: {fileID: 1322743059}
-  scoreElement: {fileID: 5627190761757371479, guid: 4b56598126ecc2a4e95fa90b0f5873a0,
-    type: 3}
+  scoreElement: {fileID: 0}
   scoreboardContent: {fileID: 2062642329}
   scoreboardManager: {fileID: 1868240904}
 --- !u!4 &1616854655

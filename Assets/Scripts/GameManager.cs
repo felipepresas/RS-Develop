@@ -59,21 +59,25 @@ public class GameManager : MonoBehaviour
         StartCoroutine(WaitForFirebaseManager());
     }
 
-    public void GameOver()
+ public void GameOver()
+{
+    if (!isGameOver)
     {
-        if (!isGameOver)
-        {
-            isGameOver = true;
-            // Muestra la pantalla de Partida finalizada en el UI
-            uiEndGameScreen.ShowEndGameScreen();
+        isGameOver = true;
+        // Muestra la pantalla de Partida finalizada en el UI
+        uiEndGameScreen.ShowEndGameScreen();
 
-            // Actualiza la experiencia del jugador
-            int experienceToAdd = 5;
-            if (FirebaseManager.instance == null)
-            {
-                Debug.LogError("FirebaseManager.instance es null");
-            }
-            else if (ScoreboardManager.instance == null)
+        // Actualiza la experiencia del jugador
+        int experienceToAdd = 5;
+        FirebaseManager firebaseManager = FindObjectOfType<FirebaseManager>();
+        if (firebaseManager == null)
+        {
+            Debug.LogError("No se encontró un objeto FirebaseManager en la escena actual.");
+        }
+        else
+        {
+            ScoreboardManager scoreboardManager = GetScoreboardManagerInstance();
+            if (scoreboardManager == null)
             {
                 Debug.LogError("ScoreboardManager.instance es null");
             }
@@ -82,7 +86,7 @@ public class GameManager : MonoBehaviour
                 string userId = FirebaseManager.instance.GetUserId();
                 if (userId != null)
                 {
-                    ScoreboardManager.instance.UpdatePlayerExperience(userId, experienceToAdd);
+                    GetScoreboardManagerInstance().UpdatePlayerExperience(userId, experienceToAdd);
                 }
                 else
                 {
@@ -90,7 +94,9 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        Debug.Log("ScoreboardManager.instance: " + GetScoreboardManagerInstance());
     }
+}
 
     public void RestartGame()
     {
@@ -176,4 +182,21 @@ public class GameManager : MonoBehaviour
     {
         timer = gameTime;
     }
+    private ScoreboardManager GetScoreboardManagerInstance()
+{
+    if (ScoreboardManager.instance == null)
+    {
+        ScoreboardManager scoreboardManager = FindObjectOfType<ScoreboardManager>();
+        if (scoreboardManager != null)
+        {
+            ScoreboardManager.instance = scoreboardManager;
+        }
+        else
+        {
+            Debug.LogError("No se encontró un objeto ScoreboardManager en la escena actual.");
+        }
+    }
+
+    return ScoreboardManager.instance;
+}
 }

@@ -60,7 +60,7 @@ public class FirebaseManager : MonoBehaviour
                 if (dependencyStatus == DependencyStatus.Available)
                 {
                     //Si estan todas disponibles inicializa Firebase
-                    Invoke("InitializeFirebase", 0.5f); // Agrega tiempo de espera antes de inicializar Firebase
+                    Invoke("InitializeFirebase", 2f); // Agrega tiempo de espera antes de inicializar Firebase
                 }
                 else
                 {
@@ -69,17 +69,10 @@ public class FirebaseManager : MonoBehaviour
                             + dependencyStatus
                     );
                 }
-                if (instance == null)
-                {
-                    instance = this;
-                    DontDestroyOnLoad(gameObject);
-                }
-                else
-                {
-                    Destroy(gameObject);
-                }
                 currentSceneName = SceneManager.GetActiveScene().name;
             });
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
     void Start()
@@ -136,19 +129,20 @@ public class FirebaseManager : MonoBehaviour
             warningLoginText.text = "Error de conexión. Por favor, inténtalo de nuevo.";
         }
     }
+
     public string GetUserId()
-{
-    FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
-    if (user != null)
     {
-        return user.UserId;
+        FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
+        if (user != null)
+        {
+            return user.UserId;
+        }
+        else
+        {
+            Debug.LogError("User not signed in");
+            return null;
+        }
     }
-    else
-    {
-        Debug.LogError("User not signed in");
-        return null;
-    }
-}
 
     //Funcion para el boton de Regristro
 
@@ -187,11 +181,11 @@ public class FirebaseManager : MonoBehaviour
 
     public void ScoreboardButton()
     {
-            // Delega la carga de datos de la tabla de puntuaciones al script ScoreboardManager
-    scoreboardManager.LoadScoreboardData();
+        // Delega la carga de datos de la tabla de puntuaciones al script ScoreboardManager
+        scoreboardManager.LoadScoreboardData();
 
-    // Cambia a la pantalla de Scoreboard
-    UIManager.instance.ScoreboardScreen();
+        // Cambia a la pantalla de Scoreboard
+        UIManager.instance.ScoreboardScreen();
     }
 
     // Funcion de Login

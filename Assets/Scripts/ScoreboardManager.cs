@@ -13,13 +13,16 @@ public class ScoreboardManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null)
+        if (instance == null)
         {
-            Debug.LogError("More than one ScoreboardManager instance found!");
-            return;
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+            DBreference = FirebaseDatabase.DefaultInstance.RootReference;
         }
-        instance = this;
-        DBreference = FirebaseDatabase.DefaultInstance.RootReference;
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
     }
 
     public IEnumerator LoadScoreboardData()
@@ -53,13 +56,18 @@ public class ScoreboardManager : MonoBehaviour
                 int deaths = int.Parse(childSnapshot.Child("Muertes").Value.ToString());
                 int xp = int.Parse(childSnapshot.Child("xp").Value.ToString());
 
-                Debug.Log($"Entrada {entryCount}: Nombre de usuario: {username}, kills: {kills}, Muertes: {deaths}, xp: {xp}");
+                Debug.Log(
+                    $"Entrada {entryCount}: Nombre de usuario: {username}, kills: {kills}, Muertes: {deaths}, xp: {xp}"
+                );
 
-                GameObject scoreboardElement = Instantiate(scoreboardEntryPrefab, scoreboardContent);
+                GameObject scoreboardElement = Instantiate(
+                    scoreboardEntryPrefab,
+                    scoreboardContent
+                );
                 scoreboardElement
                     .GetComponent<ScoreElement>()
                     .NewScoreElement(username, kills, deaths, xp);
-                    
+
                 entryCount++;
             }
         }
@@ -79,19 +87,27 @@ public class ScoreboardManager : MonoBehaviour
 
         if (DBTask.Exception != null)
         {
-            Debug.LogWarning(message: $"Failed to get current experience value: {DBTask.Exception}");
+            Debug.LogWarning(
+                message: $"Failed to get current experience value: {DBTask.Exception}"
+            );
         }
         else
         {
             int currentExperience = int.Parse(DBTask.Result.Value.ToString());
             int newExperience = currentExperience + experienceToAdd;
 
-            var updateTask = DBreference.Child("Usuarios").Child(userId).Child("xp").SetValueAsync(newExperience);
+            var updateTask = DBreference
+                .Child("Usuarios")
+                .Child(userId)
+                .Child("xp")
+                .SetValueAsync(newExperience);
             yield return new WaitUntil(predicate: () => updateTask.IsCompleted);
 
             if (updateTask.Exception != null)
             {
-                Debug.LogWarning(message: $"Failed to update experience value: {updateTask.Exception}");
+                Debug.LogWarning(
+                    message: $"Failed to update experience value: {updateTask.Exception}"
+                );
             }
             else
             {
