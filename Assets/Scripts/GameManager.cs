@@ -61,6 +61,18 @@ public class GameManager : MonoBehaviour
             isGameOver = true;
             // Muestra la pantalla de Partida finalizada en el UI
             uiEndGameScreen.ShowEndGameScreen();
+
+            // Actualiza la experiencia del jugador
+            int experienceToAdd = 5;
+            string userId = FirebaseManager.instance.GetUserId();
+            if (userId != null)
+            {
+                ScoreboardManager.instance.UpdatePlayerExperience(userId, experienceToAdd);
+            }
+            else
+            {
+                Debug.LogError("No se pudo obtener el ID de usuario.");
+            }
         }
     }
 

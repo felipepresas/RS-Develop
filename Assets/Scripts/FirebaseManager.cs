@@ -136,6 +136,19 @@ public class FirebaseManager : MonoBehaviour
             warningLoginText.text = "Error de conexión. Por favor, inténtalo de nuevo.";
         }
     }
+    public string GetUserId()
+{
+    FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
+    if (user != null)
+    {
+        return user.UserId;
+    }
+    else
+    {
+        Debug.LogError("User not signed in");
+        return null;
+    }
+}
 
     //Funcion para el boton de Regristro
 
