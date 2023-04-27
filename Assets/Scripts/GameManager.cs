@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    private UIEndGameScreen uiEndGameScreen;
     public static GameManager Instance { get; private set; }
     private float gameTime = 90f; // tiempo en segundos (1:30)
     private float timer = 0f;
@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         playerController = FindObjectOfType<PlayerController>();
+        uiEndGameScreen = FindObjectOfType<UIEndGameScreen>();
     }
 
     public void GameOver()
@@ -59,7 +60,7 @@ public class GameManager : MonoBehaviour
         {
             isGameOver = true;
             // Muestra la pantalla de Partida finalizada en el UI
-            UIGame.Instance.ShowEndGameScreen();
+            uiEndGameScreen.ShowEndGameScreen();
         }
     }
 
@@ -67,6 +68,9 @@ public class GameManager : MonoBehaviour
     {
         // Reiniciar la escena actual
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        // Reiniciar el temporizador
+        ResetTimer();
     }
 
     public void LoadScoreboardScene()
@@ -82,15 +86,10 @@ public class GameManager : MonoBehaviour
         // Comprueba que playerController no sea nulo antes de acceder a sus propiedades
         if (playerController != null)
         {
-            if (playerController.isDead && !isGameOver)
+            if ((playerController.isDead || timer <= 0f) && !isGameOver)
             {
                 GameOver();
             }
-        }
-        else if (timer <= 0f && !isGameOver)
-        {
-            // Fin del juego
-            GameOver();
         }
     }
 
@@ -114,5 +113,10 @@ public class GameManager : MonoBehaviour
     public float GetGameTime()
     {
         return gameTime;
+    }
+
+    public void ResetTimer()
+    {
+        timer = gameTime;
     }
 }

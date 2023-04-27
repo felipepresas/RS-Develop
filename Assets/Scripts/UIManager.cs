@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class UIManager : MonoBehaviour
@@ -11,6 +12,7 @@ public class UIManager : MonoBehaviour
     public GameObject userDataUI;
     public GameObject scoreboardUI;
     public GameObject gameOverUI;
+    
     public GameObject[] screens;
 
     private void Awake()
@@ -37,10 +39,10 @@ public class UIManager : MonoBehaviour
 
     public void ClearScreen() //Turn off all screens
     {
-    for (int i = 0; i < screens.Length; i++)
-    {
-        screens[i].SetActive(false);
-    }
+        for (int i = 0; i < screens.Length; i++)
+        {
+            screens[i].SetActive(false);
+        }
     }
 
     public void LoginScreen() //Back button
@@ -63,7 +65,19 @@ public class UIManager : MonoBehaviour
 
     public void ScoreboardScreen() //Scoreboard button
     {
+        Debug.Log("Botón de marcador presionado - Cargando datos del marcador");
+        StartCoroutine(ScoreboardManager.instance.LoadScoreboardData());
         ClearScreen();
         scoreboardUI.SetActive(true);
+    }
+
+    public void RestartButton()
+    {
+        GameManager.Instance.RestartGame();
+    }
+
+    public void MainMenuButton()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }

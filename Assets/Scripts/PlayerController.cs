@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     public static PlayerController instance;
 
     [SerializeField]
-    private float speed = 12.0f;
+    private float speed = 14.0f;
 
     [SerializeField]
     private float jumpForce = 5.0f;
@@ -212,35 +212,35 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision collision)
-{
-    if (collision.gameObject.CompareTag("Ground"))
     {
-        isGrounded = true;
-    }
-    else if (collision.gameObject.CompareTag("Enemy"))
-    {
-        if (hasPowerUp)
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            HealthController enemyHealthController =
-                collision.gameObject.GetComponent<HealthController>();
-            enemyHealthController.TakeDamage(2);
-
-            Rigidbody enemyRigidbody = collision.gameObject.GetComponent<Rigidbody>();
-            Vector3 awayFromPlayer =
-                collision.gameObject.transform.position - this.transform.position;
-            enemyRigidbody.AddForce(awayFromPlayer * powerUpForce, ForceMode.Impulse);
+            isGrounded = true;
         }
-        else
+        else if (collision.gameObject.CompareTag("Enemy"))
         {
-            healthController.TakeDamage(1);
-            AudioSource audioSource = GetComponent<AudioSource>();
-            if (audioSource && audioSource.enabled)
+            if (hasPowerUp)
             {
-                audioSource.Play();
+                HealthController enemyHealthController =
+                    collision.gameObject.GetComponent<HealthController>();
+                enemyHealthController.TakeDamage(2);
+
+                Rigidbody enemyRigidbody = collision.gameObject.GetComponent<Rigidbody>();
+                Vector3 awayFromPlayer =
+                    collision.gameObject.transform.position - this.transform.position;
+                enemyRigidbody.AddForce(awayFromPlayer * powerUpForce, ForceMode.Impulse);
+            }
+            else
+            {
+                healthController.TakeDamage(1); // Solo inflige daño una vez
+                AudioSource audioSource = GetComponent<AudioSource>();
+                if (audioSource && audioSource.enabled)
+                {
+                    audioSource.Play();
+                }
             }
         }
     }
-}
 
     private void UpdatePlayerScore(int points)
     {

@@ -8,6 +8,10 @@ public class HealthController : MonoBehaviour
     [SerializeField]
     private int maxHealth = 10;
     private int currentHealth;
+
+    [SerializeField]
+    private float damageCooldown = 0.5f;
+    private float lastDamageTime = Mathf.NegativeInfinity;
     private UIGame uiManager;
     private PlayerController player;
     public delegate void DeathAction();
@@ -23,23 +27,28 @@ public class HealthController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        currentHealth -= damage;
-
-        if (currentHealth <= 0)
+        if (Time.time >= lastDamageTime + damageCooldown)
         {
-            if (OnDeath != null)
+            currentHealth -= damage;
+            lastDamageTime = Time.time;
+
+            if (currentHealth <= 0)
             {
-                OnDeath();
+                if (OnDeath != null)
+                {
+                    OnDeath();
+                }
+                Die();
             }
+            OnHealthChanged?.Invoke();
         }
-        OnHealthChanged?.Invoke();
     }
 
     private void Die()
     {
         gameObject.SetActive(false);
-        PlayerController.instance.isDead = true;
-        // ...
+    player.isDead = true;
+    GameManager.Instance.GameOver();
     }
 
     public void Heal(int amount)
@@ -47,7 +56,8 @@ public class HealthController : MonoBehaviour
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
         OnHealthChanged?.Invoke();
     }
-        public int GetHealth()
+
+    public int GetHealth()
     {
         return currentHealth;
     }

@@ -10,8 +10,7 @@ public class UIGame : MonoBehaviour
     public GameObject healthBar;
     public Slider slider;
 
-    [SerializeField]
-    private GameObject endGameScreen;
+  
     private PlayerController playerController;
     private EnemyController[] enemyControllers;
     private float gameTime;
@@ -54,13 +53,11 @@ public class UIGame : MonoBehaviour
         HealthController playerHealthController = playerController.GetComponent<HealthController>();
         enemyControllers = FindObjectsOfType<EnemyController>();
         // Suscribirse al evento OnHealthChanged y actualizar la barra de vida
-        playerHealthController.OnHealthChanged += () =>
+        playerHealthController.OnHealthChanged += UpdateHealthBar;
         {
-            UpdateHealthBar(
-                playerHealthController.GetHealth(),
-                playerHealthController.GetMaxHealth()
-            );
-        };
+            UpdateHealthBar();
+        }
+        ;
 
         // Inicializar el valor de la barra de vida
         slider.value = playerHealthController.GetHealth();
@@ -79,8 +76,11 @@ public class UIGame : MonoBehaviour
         UpdateTimeRemainingText();
     }
 
-    public void UpdateHealthBar(int currentHealth, int maxHealth)
+    public void UpdateHealthBar()
     {
+        HealthController playerHealthController = playerController.GetComponent<HealthController>();
+        int currentHealth = playerHealthController.GetHealth();
+        int maxHealth = playerHealthController.GetMaxHealth();
         // Actualizar el valor y rango del slider de la barra de vida
         slider.value = currentHealth;
         slider.maxValue = maxHealth;
@@ -114,15 +114,10 @@ public class UIGame : MonoBehaviour
         killText.text = "Kills: " + kills;
     }
 
-    public void ShowEndGameScreen()
-    {
-        // Asumiendo que ya tienes un GameObject para la pantalla de Partida finalizada en tu UI
-        endGameScreen.SetActive(true);
-    }
     public void SaveGameData()
-{
-    PlayerPrefs.SetInt("Puntos", int.Parse(pointsText.text.Substring(8)));
-    PlayerPrefs.SetFloat("TimeRemaining", timeRemaining);
-    PlayerPrefs.Save();
-}
+    {
+        PlayerPrefs.SetInt("Puntos", int.Parse(pointsText.text.Substring(8)));
+        PlayerPrefs.SetFloat("TimeRemaining", timeRemaining);
+        PlayerPrefs.Save();
+    }
 }
