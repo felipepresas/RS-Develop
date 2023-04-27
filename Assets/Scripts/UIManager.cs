@@ -49,18 +49,21 @@ public class UIManager : MonoBehaviour
     {
         ClearScreen();
         loginUI.SetActive(true);
+        Debug.Log("Función LoginScreen llamada.");
     }
 
     public void RegisterScreen() // Register button
     {
         ClearScreen();
         registerUI.SetActive(true);
+        Debug.Log("Función RegisterScreen llamada.");
     }
 
     public void UserDataScreen() //Logged in
     {
         ClearScreen();
         userDataUI.SetActive(true);
+        Debug.Log("Función UserDataScreen llamada.");
     }
 
     public void ScoreboardScreen() //Scoreboard button
@@ -69,6 +72,7 @@ public class UIManager : MonoBehaviour
         StartCoroutine(ScoreboardManager.instance.LoadScoreboardData());
         ClearScreen();
         scoreboardUI.SetActive(true);
+        Debug.Log("Función ScoreboardScreen llamada.");
     }
 
     public void RestartButton()

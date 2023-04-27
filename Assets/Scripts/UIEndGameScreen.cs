@@ -16,4 +16,10 @@ public class UIEndGameScreen : MonoBehaviour
     {
         content.SetActive(true);
     }
+
+    public void HideEndGameScreen()
+    {
+        content.SetActive(false);
+    }
 }
+

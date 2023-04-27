@@ -63,7 +63,6 @@ public class ScoreboardManager : MonoBehaviour
             entryCount++;
         }
 
-        UIManager.instance.ScoreboardScreen();
     }
 
     Debug.Log("LoadScoreboardData - Fin");

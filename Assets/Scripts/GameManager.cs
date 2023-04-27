@@ -71,6 +71,24 @@ public class GameManager : MonoBehaviour
 
         // Reiniciar el temporizador
         ResetTimer();
+
+        // Agregar un evento para ejecutar una función después de que se haya cargado la nueva escena
+        SceneManager.sceneLoaded += OnSceneRestarted;
+    }
+
+    private void OnSceneRestarted(Scene scene, LoadSceneMode mode)
+    {
+        // Desuscribirse del evento sceneLoaded para evitar múltiples llamadas en reinicios posteriores
+        SceneManager.sceneLoaded -= OnSceneRestarted;
+
+        // Volver a encontrar el objeto UIEndGameScreen
+        uiEndGameScreen = FindObjectOfType<UIEndGameScreen>();
+
+        // Esconder la pantalla de fin de juego
+        uiEndGameScreen.HideEndGameScreen();
+
+        // Restablecer el estado del juego
+        isGameOver = false;
     }
 
     public void LoadScoreboardScene()
