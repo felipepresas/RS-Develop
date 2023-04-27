@@ -47,8 +47,11 @@ public class HealthController : MonoBehaviour
     private void Die()
     {
         gameObject.SetActive(false);
-    player.isDead = true;
-    GameManager.Instance.GameOver();
+
+        if (gameObject.CompareTag("Player"))
+        {
+            GameManager.Instance.GameOver();
+        }
     }
 
     public void Heal(int amount)
