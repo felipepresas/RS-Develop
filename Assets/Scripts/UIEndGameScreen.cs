@@ -5,10 +5,15 @@ using UnityEngine;
 public class UIEndGameScreen : MonoBehaviour
 {
     [SerializeField]
-    private GameObject endGameScreen;
+    private GameObject content;
+
+    private void Start()
+    {
+        content.SetActive(false);
+    }
 
     public void ShowEndGameScreen()
     {
-        endGameScreen.SetActive(true);
+        content.SetActive(true);
     }
 }
