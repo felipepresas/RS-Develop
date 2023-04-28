@@ -10,7 +10,6 @@ public class UIGame : MonoBehaviour
     public GameObject healthBar;
     public Slider slider;
 
-  
     private PlayerController playerController;
     private EnemyController[] enemyControllers;
     private float gameTime;
@@ -52,6 +51,19 @@ public class UIGame : MonoBehaviour
             .GetComponent<PlayerController>();
         HealthController playerHealthController = playerController.GetComponent<HealthController>();
         enemyControllers = FindObjectsOfType<EnemyController>();
+        // Suscribirse al evento OnHealthChanged y actualizar la barra de vida
+        playerHealthController.OnHealthChanged += UpdateHealthBar;
+        {
+            UpdateHealthBar();
+        }
+        ;
+        // Suscribirse al evento OnDeath de todos los enemigos en la escena
+        foreach (EnemyController enemyController in enemyControllers)
+        {
+            HealthController enemyHealthController =
+                enemyController.GetComponent<HealthController>();
+            enemyHealthController.OnDeath += HandleEnemyDeath;
+        }
         // Suscribirse al evento OnHealthChanged y actualizar la barra de vida
         playerHealthController.OnHealthChanged += UpdateHealthBar;
         {
@@ -112,6 +124,13 @@ public class UIGame : MonoBehaviour
     public void UpdateKillsText(int kills)
     {
         killText.text = "Kills: " + kills;
+    }
+
+    private void HandleEnemyDeath()
+    {
+        // Incrementar las muertes y actualizar el texto
+        int currentKills = int.Parse(killText.text.Substring(6));
+        UpdateKillsText(currentKills + 1);
     }
 
     public void SaveGameData()

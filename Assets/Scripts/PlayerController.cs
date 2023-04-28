@@ -71,8 +71,10 @@ public class PlayerController : MonoBehaviour
     private bool hasPowerUp;
     private bool isGrounded;
     private bool canDoubleJump;
+    public float fireDamage = 2f;
     private bool canUseAbility = true;
     private float lastAbilityTime = Mathf.NegativeInfinity;
+    private float accumulatedFireDamage;
     private GameManager gameManager;
     private Rigidbody rb;
     private DatabaseReference databaseReference;
@@ -208,6 +210,24 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             UpdatePlayerScore(10);
             Destroy(other.gameObject);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Fire"))
+        {
+            Debug.Log("Player is in contact with fire.");
+            accumulatedFireDamage += fireDamage * Time.deltaTime;
+            Debug.Log($"Accumulated fire damage: {accumulatedFireDamage}");
+
+            if (accumulatedFireDamage >= 1)
+            {
+                int damageToApply = Mathf.FloorToInt(accumulatedFireDamage);
+                Debug.Log($"Applying {damageToApply} fire damage to the player.");
+                healthController.TakeDamage(damageToApply);
+                accumulatedFireDamage -= damageToApply;
+            }
         }
     }
 
