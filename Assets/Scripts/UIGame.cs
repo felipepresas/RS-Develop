@@ -128,9 +128,18 @@ public class UIGame : MonoBehaviour
 
     private void HandleEnemyDeath()
     {
-        // Incrementar las muertes y actualizar el texto
-        int currentKills = int.Parse(killText.text.Substring(6));
-        UpdateKillsText(currentKills + 1);
+        // Verifica si el texto en killText contiene "Kills:"
+        if (killText.text.Contains("Kills:"))
+        {
+            // Incrementar las muertes y actualizar el texto
+            int currentKills = int.Parse(killText.text.Substring(6));
+            UpdateKillsText(currentKills + 1);
+        }
+        else
+        {
+            // Si no se encuentra "Kills:", inicializa el contador de muertes en 1
+            UpdateKillsText(1);
+        }
     }
 
     public void SaveGameData()

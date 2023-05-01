@@ -10612,6 +10612,7 @@ MonoBehaviour:
   - {fileID: 2055801323}
   - {fileID: 2129422514}
   - {fileID: 191733764}
+  firebaseManager: {fileID: 1616854654}
 --- !u!4 &877034032
 Transform:
   m_ObjectHideFlags: 0
@@ -22080,8 +22081,6 @@ MonoBehaviour:
   usernameField: {fileID: 1775777202}
   xpField: {fileID: 2010059304}
   killsField: {fileID: 1942036409}
-  deathsField: {fileID: 1322743059}
-  scoreElement: {fileID: 0}
   scoreboardContent: {fileID: 2062642329}
   scoreboardManager: {fileID: 1868240904}
 --- !u!4 &1616854655

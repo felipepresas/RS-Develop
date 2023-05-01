@@ -12,8 +12,9 @@ public class UIManager : MonoBehaviour
     public GameObject userDataUI;
     public GameObject scoreboardUI;
     public GameObject gameOverUI;
-    
+
     public GameObject[] screens;
+    public FirebaseManager firebaseManager;
 
     private void Awake()
     {
@@ -64,6 +65,8 @@ public class UIManager : MonoBehaviour
         ClearScreen();
         userDataUI.SetActive(true);
         Debug.Log("Función UserDataScreen llamada.");
+        // Llama a la función LoadUserData de FirebaseManager
+        firebaseManager.StartCoroutine(firebaseManager.LoadUserData());
     }
 
     public void ScoreboardScreen() //Scoreboard button

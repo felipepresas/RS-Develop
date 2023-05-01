@@ -18,10 +18,13 @@ public class ScoreboardManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
             DBreference = FirebaseDatabase.DefaultInstance.RootReference;
+            Debug.Log("ScoreboardManager instance created.");
         }
         else if (instance != this)
         {
+            Debug.LogWarning("Another instance of ScoreboardManager found, destroying it.");
             Destroy(gameObject);
+            
         }
     }
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 using UnityEngine.SceneManagement;
 using Firebase;
 using Firebase.Auth;
@@ -42,8 +43,8 @@ public class FirebaseManager : MonoBehaviour
     public TMP_InputField usernameField;
     public TMP_InputField xpField;
     public TMP_InputField killsField;
-    public TMP_InputField deathsField;
-    public GameObject scoreElement;
+    // public TMP_InputField deathsField;
+    // public GameObject scoreElement;
     public Transform scoreboardContent;
 
     // Agrega una referencia al ScoreboardManager
@@ -174,7 +175,7 @@ public class FirebaseManager : MonoBehaviour
 
         StartCoroutine(UpdateXp(int.Parse(xpField.text)));
         StartCoroutine(UpdateKills(int.Parse(killsField.text)));
-        StartCoroutine(UpdateDeaths(int.Parse(deathsField.text)));
+        //StartCoroutine(UpdateDeaths(int.Parse(deathsField.text)));
         // Save game data
         StartCoroutine(UpdateGameData());
     }
@@ -188,7 +189,6 @@ public class FirebaseManager : MonoBehaviour
         UIManager.instance.ScoreboardScreen();
     }
 
-    // Funcion de Login
     private IEnumerator Login(string _email, string _password)
     {
         //Llama Firebase auth signin funcion pasando el correo, la contraseña y el usuario
@@ -468,34 +468,39 @@ public class FirebaseManager : MonoBehaviour
         }
     }
 
-    private IEnumerator LoadUserData()
+    public IEnumerator LoadUserData()
+{
+    // Verifica si el objeto User es null antes de continuar
+    if (User == null)
     {
-        //Obtiene el valor del usuario logeado
-        var DBTask = DBreference.Child("Usuarios").Child(User.UserId).GetValueAsync();
-
-        yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
-
-        if (DBTask.Exception != null)
-        {
-            Debug.LogWarning(message: $"Fallo al registrar la tarea {DBTask.Exception}");
-        }
-        else if (DBTask.Result.Value == null)
-        {
-            //No existe informacion de momento
-            xpField.text = "0";
-            killsField.text = "0";
-            deathsField.text = "0";
-        }
-        else
-        {
-            //Informacion a sido recuperada
-            DataSnapshot snapshot = DBTask.Result;
-
-            xpField.text = snapshot.Child("xp").Value.ToString();
-            killsField.text = snapshot.Child("kills").Value.ToString();
-            deathsField.text = snapshot.Child("Muertes").Value.ToString();
-        }
+        Debug.LogError("User object is null");
+        yield break;
     }
+
+    // Obtiene la referencia a la base de datos de Firebase
+    DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+
+    // Solicita los datos del usuario actual
+    var getUserDataTask = reference.Child("Usuarios").Child(User.UserId).GetValueAsync();
+    yield return new WaitUntil(predicate: () => getUserDataTask.IsCompleted);
+
+    if (getUserDataTask.Exception != null)
+    {
+        Debug.LogError("Error al obtener datos del usuario: " + getUserDataTask.Exception);
+    }
+    else if (getUserDataTask.IsCompleted)
+    {
+        DataSnapshot snapshot = getUserDataTask.Result;
+
+        // Aquí es donde actualizas la información del usuario en la interfaz de usuario
+        // según los datos recuperados en 'snapshot'
+
+        // Por ejemplo, si tienes campos para xp, kills y deaths en tu UI
+        xpField.text = snapshot.Child("xp").Value.ToString();
+        killsField.text = snapshot.Child("kills").Value.ToString();
+        //deathsField.text = snapshot.Child("deaths").Value.ToString();
+    }
+}
 
     private IEnumerator LoadScoreboardData()
     {
@@ -528,10 +533,10 @@ public class FirebaseManager : MonoBehaviour
                 int xp = int.Parse(childSnapshot.Child("xp").Value.ToString());
 
                 //instancia una nueva tabla de puntuacion
-                GameObject scoreboardElement = Instantiate(scoreElement, scoreboardContent);
-                scoreboardElement
-                    .GetComponent<ScoreElement>()
-                    .NewScoreElement(username, kills, deaths, xp);
+                // GameObject scoreboardElement = Instantiate(scoreElement, scoreboardContent);
+                // scoreboardElement
+                //     .GetComponent<ScoreElement>()
+                //     .NewScoreElement(username, kills, deaths, xp);
             }
 
             // ir hasta la nueva pantalla de puntuacion
@@ -543,5 +548,61 @@ public class FirebaseManager : MonoBehaviour
     {
         previousSceneName = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene("RokkanGame");
+    }
+
+    public void AddAchievementToUser(string userId, string achievementId)
+    {
+        FirebaseDatabase.DefaultInstance
+            .GetReference("LogrosUsuarios")
+            .Child(userId)
+            .Child(achievementId)
+            .SetValueAsync(true);
+    }
+
+    public void GetUnlockedAchievements(string userId, Action<Dictionary<string, bool>> callback)
+    {
+        FirebaseDatabase.DefaultInstance
+            .GetReference("LogrosUsuarios")
+            .Child(userId)
+            .GetValueAsync()
+            .ContinueWith(task =>
+            {
+                if (task.IsFaulted || task.IsCanceled)
+                {
+                    Debug.LogError("Error al obtener logros desbloqueados");
+                }
+                else
+                {
+                    DataSnapshot dataSnapshot = task.Result;
+                    Dictionary<string, bool> unlockedAchievements =
+                        dataSnapshot.Value as Dictionary<string, bool>;
+                    callback(unlockedAchievements);
+                }
+            });
+    }
+
+    public void GetAchievementInfo(
+        string achievementId,
+        Action<Dictionary<string, object>> callback
+    )
+    {
+        FirebaseDatabase.DefaultInstance
+            .GetReference("Logros")
+            .Child(achievementId)
+            .GetValueAsync()
+            .ContinueWith(task =>
+            {
+                if (task.IsFaulted || task.IsCanceled)
+                {
+                    Debug.LogError("Error al obtener información del logro");
+                }
+                else
+                {
+                    DataSnapshot dataSnapshot = task.Result;
+                    Dictionary<string, object> achievementInfo =
+                        dataSnapshot.Value as Dictionary<string, object>;
+                    callback(achievementInfo);
+                }
+            });
     }
 }

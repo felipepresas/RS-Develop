@@ -20,9 +20,11 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         // Asegurar que solo haya una instancia de GameManager
+        
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else if (Instance != this)
         {

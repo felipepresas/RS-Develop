@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - Ball
   - PickUp
+  - Fire
   layers:
   - Default
   - TransparentFX
